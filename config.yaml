@@ -1,0 +1,76 @@
+# ---- Everything you'd want to tune lives here. Secrets do NOT (they go in env vars / GitHub Secrets). ----
+
+display_timezone: America/New_York      # timezone used for "x ago"/digests text; set your own (e.g. Europe/London)
+
+poll:
+  active_seconds: 60        # US pre-market -> after-hours (04:00-20:00 ET, Mon-Fri). Used by --loop mode only
+  idle_seconds: 600         # nights/weekends
+
+news:
+  max_age_hours: 8          # ignore anything older (prevents floods on first run)
+  min_score: 4              # raise to get fewer alerts, lower to get more
+  breaking_score: 7         # >= this gets the red BREAKING tag
+  keyword_cap: 6
+  max_per_cycle: 10
+  google_every_seconds: 180 # be polite to Google News; Yahoo is polled every 60s
+  topic_queries:            # market-wide topics (no single ticker)
+    - S&P 500
+    - Federal Reserve interest rates
+    - CPI inflation report
+    - AI chip export controls
+    - OpenAI
+    - Anthropic
+    - AI data center spending
+  extra_feeds:              # primary sources: some are literally first to publish
+    - https://blogs.nvidia.com/feed/
+    - https://openai.com/news/rss.xml
+    - https://www.federalreserve.gov/feeds/press_all.xml
+  trusted_sources: [reuters, bloomberg, cnbc, wsj, wall street journal, financial times, barron, marketwatch, associated press, yahoo finance, sec]
+
+# Words in a headline that make it matter. weight -> words
+keywords:
+  3: [earnings, guidance, downgrade, upgrade, acquisition, acquires, antitrust, export controls, ban, sanctions, tariff, tariffs, investigation, lawsuit, rate cut, rate hike, fomc, cpi, stock split, buyback, price target, layoffs, recall, halts, bankruptcy, delisted, 8-K]
+  2: [surges, soars, plunges, tumbles, jumps, slides, plummets, record, forecast, beats, misses, partnership, deal, contract, launches, unveils, gpu, data center, revenue, outlook, investors]
+  1: [ai, chip, chips, semiconductor, stock, shares, analyst]
+
+# Your starting watchlist. Add/remove live in Telegram with /add and /remove.
+watchlist:
+  NVDA:  {name: NVIDIA,            aliases: [Jensen Huang, Blackwell, CUDA]}
+  MSFT:  {name: Microsoft,         aliases: [Azure, Copilot, Satya Nadella]}
+  GOOGL: {name: Alphabet,          aliases: [Google, Gemini, DeepMind]}
+  AMZN:  {name: Amazon,            aliases: [AWS]}
+  META:  {name: Meta Platforms,    aliases: [Zuckerberg, Llama]}
+  AMD:   {name: AMD,               aliases: [Lisa Su, Instinct]}
+  TSM:   {name: TSMC,              aliases: [Taiwan Semiconductor]}
+  AVGO:  {name: Broadcom,          aliases: []}
+  ASML:  {name: ASML,              aliases: []}
+  PLTR:  {name: Palantir,          aliases: []}
+  ORCL:  {name: Oracle,            aliases: []}
+  AAPL:  {name: Apple,             aliases: []}
+  TSLA:  {name: Tesla,             aliases: [Elon Musk, Optimus]}
+
+indices:                  # shown in /market and digests
+  ^GSPC: S&P 500
+  ^IXIC: Nasdaq
+  ^SOX:  Semiconductors
+  ^VIX:  VIX (fear)
+
+alerts:
+  price_move_pct: 3.0         # alert when a watchlist stock moves this much vs yesterday's close (re-alerts at 2x, 3x...)
+  check_every_seconds: 300
+
+digests:                      # times are US Eastern, Mon-Fri
+  premarket:
+    time: "08:30"
+    title: "☀️ Pre-market briefing"
+    extra: {ES=F: S&P futures, NQ=F: Nasdaq futures}
+  close:
+    time: "16:30"
+    title: "🌙 Market close recap"
+    extra: {}
+
+# Optional SEC 8-K filings (material events, the primary source for company news). Needs SEC_USER_AGENT env var.
+# CIKs: double-check them at sec.gov/edgar/searchedgar/companysearch before relying on them.
+sec:
+  enabled: false
+  ciks: {NVDA: 1045810, MSFT: 789019, GOOGL: 1652044, AMZN: 1018724, META: 1326801, AMD: 2488, AAPL: 320193}
